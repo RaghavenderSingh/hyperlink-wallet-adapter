@@ -1,6 +1,6 @@
 # Examples
 
-This document provides comprehensive examples of how to use the `@hyperlink/wallet-adapter` library in various scenarios.
+This document provides comprehensive examples of how to use the HyperLink Wallet Adapter library in various scenarios.
 
 ## Table of Contents
 
@@ -17,10 +17,10 @@ This document provides comprehensive examples of how to use the `@hyperlink/wall
 ### Simple Wallet Connection
 
 ```typescript
-import { HyperLinkWalletAdapter } from "@hyperlink/wallet-adapter";
+import { HyperLinkWalletAdapter } from "hyperlink-wallet-adapter";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 
-// Create wallet adapter instance
+// Create a new wallet adapter instance
 const wallet = new HyperLinkWalletAdapter({
   clientId: "your-client-id",
   title: "My dApp",
@@ -28,21 +28,21 @@ const wallet = new HyperLinkWalletAdapter({
   walletAdapterNetwork: WalletAdapterNetwork.Mainnet,
 });
 
-// Connect to wallet
+// Connect to the wallet
 async function connectWallet() {
   try {
     await wallet.connect();
-    console.log("Connected!", wallet.publicKey?.toBase58());
+    console.log("Connected successfully!", wallet.publicKey?.toBase58());
   } catch (error) {
     console.error("Connection failed:", error);
   }
 }
 
-// Disconnect from wallet
+// Disconnect from the wallet
 async function disconnectWallet() {
   try {
     await wallet.disconnect();
-    console.log("Disconnected!");
+    console.log("Disconnected successfully!");
   } catch (error) {
     console.error("Disconnection failed:", error);
   }
@@ -52,9 +52,10 @@ async function disconnectWallet() {
 ### Wallet Registration
 
 ```typescript
-import { registerHyperLinkWallet } from "@hyperlink/wallet-adapter";
+import { registerHyperLinkWallet } from "hyperlink-wallet-adapter";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 
-// Register the wallet
+// Register the wallet adapter
 const unregister = registerHyperLinkWallet({
   clientId: "your-client-id",
   title: "My dApp",
@@ -66,7 +67,7 @@ const unregister = registerHyperLinkWallet({
   walletAdapterNetwork: WalletAdapterNetwork.Mainnet,
 });
 
-// Later, unregister
+// Unregister when the application unmounts
 unregister();
 ```
 
@@ -76,7 +77,7 @@ unregister();
 
 ```typescript
 import React, { useState, useEffect } from 'react';
-import { HyperLinkWalletAdapter } from '@hyperlink/wallet-adapter';
+import { HyperLinkWalletAdapter } from 'hyperlink-wallet-adapter';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 
 function WalletComponent() {
@@ -85,6 +86,7 @@ function WalletComponent() {
   const [publicKey, setPublicKey] = useState<string | null>(null);
 
   useEffect(() => {
+    // Create the wallet adapter instance
     const newWallet = new HyperLinkWalletAdapter({
       clientId: 'your-client-id',
       title: 'My dApp',
@@ -92,7 +94,7 @@ function WalletComponent() {
       walletAdapterNetwork: WalletAdapterNetwork.Mainnet
     });
 
-    // Set up event listeners
+    // Set up event listeners for wallet connection events
     newWallet.on('connect', (pk) => {
       setConnected(true);
       setPublicKey(pk.toBase58());
@@ -105,7 +107,7 @@ function WalletComponent() {
 
     setWallet(newWallet);
 
-    // Cleanup
+    // Cleanup when component unmounts
     return () => {
       newWallet.disconnect();
     };
@@ -152,12 +154,12 @@ export default WalletComponent;
 
 ```typescript
 import React from 'react';
-import { WalletProvider } from '@solana/wallet-adapter-react';
+import { WalletProvider, useWallet } from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { HyperLinkWalletAdapter } from '@hyperlink/wallet-adapter';
+import { HyperLinkWalletAdapter } from 'hyperlink-wallet-adapter';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 
-// Import wallet adapter CSS
+// Import the wallet adapter CSS styles
 import '@solana/wallet-adapter-react-ui/styles.css';
 
 const wallets = [
@@ -183,7 +185,7 @@ function App() {
 }
 
 function WalletActions() {
-  const { wallet, connect, disconnect, connected, publicKey } = useWallet();
+  const { connect, disconnect, connected, publicKey } = useWallet();
 
   const handleConnect = async () => {
     try {
@@ -216,6 +218,198 @@ function WalletActions() {
 }
 
 export default App;
+```
+
+### Complete Next.js Example
+
+Here is a complete working example of integrating the wallet adapter in a Next.js application with a transaction form:
+
+```typescript
+"use client";
+
+import React, { useMemo, useState } from "react";
+import {
+  ConnectionProvider,
+  WalletProvider,
+  useWallet,
+  useConnection,
+} from "@solana/wallet-adapter-react";
+import { HyperLinkWalletAdapter } from "hyperlink-wallet-adapter";
+import {
+  WalletModalProvider,
+  WalletDisconnectButton,
+  WalletMultiButton,
+} from "@solana/wallet-adapter-react-ui";
+import {
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  LAMPORTS_PER_SOL,
+} from "@solana/web3.js";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+
+// Import wallet adapter CSS
+import "@solana/wallet-adapter-react-ui/styles.css";
+
+function SendSolForm() {
+  const { publicKey, sendTransaction } = useWallet();
+  const { connection } = useConnection();
+  const [recipient, setRecipient] = useState("");
+  const [amount, setAmount] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState("");
+
+  const handleSend = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!publicKey) {
+      setStatus("Please connect your wallet first");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setStatus("");
+
+      // Validate recipient address
+      const recipientPubkey = new PublicKey(recipient);
+
+      // Convert SOL to lamports
+      const lamports = parseFloat(amount) * LAMPORTS_PER_SOL;
+
+      // Create transfer instruction
+      const transaction = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: publicKey,
+          toPubkey: recipientPubkey,
+          lamports,
+        })
+      );
+
+      // Send transaction
+      const signature = await sendTransaction(transaction, connection);
+
+      // Wait for confirmation
+      const latestBlockhash = await connection.getLatestBlockhash();
+      await connection.confirmTransaction({
+        signature,
+        blockhash: latestBlockhash.blockhash,
+        lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+      });
+
+      setStatus(`Success! Transaction signature: ${signature}`);
+      setRecipient("");
+      setAmount("");
+    } catch (error: any) {
+      setStatus(`Error: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!publicKey) {
+    return (
+      <div className="text-center text-gray-500">
+        Please connect your wallet to send SOL
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full max-w-md">
+      <h2 className="text-xl font-semibold mb-4">Send SOL</h2>
+      <form onSubmit={handleSend} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Recipient Address
+          </label>
+          <input
+            type="text"
+            value={recipient}
+            onChange={(e) => setRecipient(e.target.value)}
+            placeholder="Enter wallet address"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Amount (SOL)
+          </label>
+          <input
+            type="number"
+            step="0.000000001"
+            min="0"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="0.0"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          {loading ? "Sending..." : "Send SOL"}
+        </button>
+
+        {status && (
+          <div
+            className={`p-3 rounded-lg text-sm ${
+              status.startsWith("Success")
+                ? "bg-green-100 text-green-800"
+                : status.startsWith("Error")
+                ? "bg-red-100 text-red-800"
+                : "bg-yellow-100 text-yellow-800"
+            }`}
+          >
+            {status}
+          </div>
+        )}
+      </form>
+    </div>
+  );
+}
+
+export default function Wallet() {
+  // Use Solana devnet for testing (or mainnet for production)
+  const endpoint = useMemo(() => "https://api.devnet.solana.com", []);
+
+  const wallets = useMemo(
+    () => [
+      new HyperLinkWalletAdapter({
+        title: "My dApp Name",
+        clientId: "your-client-id-from-hyperlink",
+        theme: "dark", // Choose from "dark", "light", or "system"
+        walletAdapterNetwork: WalletAdapterNetwork.Devnet,
+      }),
+    ],
+    []
+  );
+
+  return (
+    <ConnectionProvider endpoint={endpoint}>
+      <WalletProvider wallets={wallets} autoConnect>
+        <WalletModalProvider>
+          <div className="min-h-screen flex flex-col items-center justify-center gap-6 p-4">
+            <h1 className="text-3xl font-bold">HyperLink Wallet Demo</h1>
+
+            <div className="flex gap-4">
+              <WalletMultiButton />
+              <WalletDisconnectButton />
+            </div>
+
+            <SendSolForm />
+          </div>
+        </WalletModalProvider>
+      </WalletProvider>
+    </ConnectionProvider>
+  );
+}
 ```
 
 ## Transaction Examples

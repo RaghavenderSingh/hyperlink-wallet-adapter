@@ -268,7 +268,7 @@ function installedToWalletReadyState(installed: boolean): WalletReadyState {
 }
 
 export class HyperLinkWalletAdapter extends BaseSignInMessageSignerWalletAdapter {
-  name = GoogleViaHyperLinkWalletName;
+  name: WalletName<"Google via HyperLink"> = GoogleViaHyperLinkWalletName;
   url = "https://coinwala.io";
 
   icon =

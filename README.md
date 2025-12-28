@@ -1,31 +1,33 @@
-# @hyperlink/wallet-adapter
+# HyperLink Wallet Adapter
 
-[![npm version](https://badge.fury.io/js/%40hyperlink%2Fwallet-adapter.svg)](https://badge.fury.io/js/%40hyperlink%2Fwallet-adapter)
+[![npm version](https://badge.fury.io/js/hyperlink-wallet-adapter.svg)](https://badge.fury.io/js/hyperlink-wallet-adapter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js >= 18](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](https://nodejs.org/)
 
-A Solana wallet adapter that seamlessly integrates HyperLink wallet functionality into Solana dApps. This library provides a robust, secure, and user-friendly way for users to connect their HyperLink wallet, sign transactions, and interact with Solana blockchain applications.
+A Solana wallet adapter that seamlessly integrates HyperLink wallet functionality into your Solana decentralized applications. This library provides a robust and secure way for users to connect their wallets, sign transactions, and interact with the Solana blockchain.
 
-## ✨ Features
+## Features
 
-- 🔐 **Solana Wallet Standard Compliance** - Implements the Solana Wallet Standard for broad compatibility
-- 📱 **Multi-Platform Support** - Works seamlessly on desktop, iOS, and Android devices
-- �� **Sign-In with Solana (SIWS)** - Supports Solana's sign-in standard for authentication
-- �� **Transaction Signing** - Sign individual or multiple transactions with ease
-- 💬 **Message Signing** - Sign arbitrary messages for authentication and verification
-- �� **Auto-Connect** - Automatic wallet reconnection on page reload
-- 🎨 **Theme Support** - Light, dark, and system theme options
-- 🏦 **Embedded Wallet UI** - Built-in wallet interface with customizable pages
-- 🛡️ **Security First** - Allowlist protection and secure communication
-- 🚀 **Performance Optimized** - Efficient wallet operations and minimal bundle size
+- **Solana Wallet Standard Compliance** - Fully implements the Solana Wallet Standard for maximum compatibility
+- **Multi-Platform Support** - Works across desktop, iOS, and Android devices
+- **Sign-In with Solana** - Supports the Solana sign-in standard for secure authentication
+- **Transaction Signing** - Sign single or multiple transactions efficiently
+- **Message Signing** - Sign arbitrary messages for authentication and verification
+- **Auto-Connect** - Automatically reconnects to the wallet on page reload
+- **Theme Support** - Choose between light, dark, or system-based themes
+- **Embedded Wallet UI** - Built-in wallet interface with customizable pages
+- **Security First** - Includes allowlist protection and secure communication channels
+- **Performance Optimized** - Efficient operations with minimal impact on bundle size
 
-## 📦 Installation
+## Installation
 
 ```bash
-npm install @hyperlink/wallet-adapter
+npm install hyperlink-wallet-adapter
 ```
 
 ### Peer Dependencies
+
+This library requires the following peer dependency:
 
 ```json
 {
@@ -33,19 +35,19 @@ npm install @hyperlink/wallet-adapter
 }
 ```
 
-## �� Quick Start
+## Quick Start
 
 ### 1. Register the Wallet Adapter
 
 ```typescript
-import { registerHyperLinkWallet } from "@hyperlink/wallet-adapter";
+import { registerHyperLinkWallet } from "hyperlink-wallet-adapter";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 
 // Register the wallet adapter
 const unregister = registerHyperLinkWallet({
-  clientId: "YOUR_CLIENT_ID", // Get this from HyperLink team
+  clientId: "YOUR_CLIENT_ID", // Get this from the HyperLink team
   title: "My dApp",
-  theme: "system", // 'light', 'dark', or 'system'
+  theme: "system", // Options: 'light', 'dark', or 'system'
   rpcUrl: "https://api.mainnet-beta.solana.com",
   installedOnDesktop: true,
   installedOnIos: true,
@@ -53,7 +55,7 @@ const unregister = registerHyperLinkWallet({
   walletAdapterNetwork: WalletAdapterNetwork.Mainnet,
 });
 
-// Clean up when done
+// Unregister when you no longer need the wallet
 unregister();
 ```
 
@@ -61,7 +63,7 @@ unregister();
 
 ```typescript
 import { WalletProvider } from '@solana/wallet-adapter-react';
-import { HyperLinkWalletAdapter } from '@hyperlink/wallet-adapter';
+import { HyperLinkWalletAdapter } from 'hyperlink-wallet-adapter';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 
 const wallets = [
@@ -79,7 +81,7 @@ const wallets = [
 function App() {
   return (
     <WalletProvider wallets={wallets} autoConnect>
-      {/* Your app components */}
+      {/* Your application components go here */}
     </WalletProvider>
   );
 }
@@ -126,15 +128,13 @@ function WalletActions() {
 }
 ```
 
-## �� Documentation
+## Documentation
 
-- [API Reference](./docs/API.md)
-- [Configuration Guide](./docs/CONFIGURATION.md)
-- [Examples](./docs/EXAMPLES.md)
-- [Troubleshooting](./docs/TROUBLESHOOTING.md)
-- [Migration Guide](./docs/MIGRATION.md)
+- [Configuration Guide](./CONFIGURATION.md)
+- [Examples](./EXAMPLES.md)
+- [Security](./SECURITY.md)
 
-## �� Configuration
+## Configuration
 
 ### WalletAdapterConfig
 
@@ -154,7 +154,7 @@ interface WalletAdapterConfig {
 }
 ```
 
-## 🌟 Advanced Features
+## Advanced Features
 
 ### Sign-In with Solana (SIWS)
 
@@ -252,7 +252,7 @@ function MessageSigningComponent() {
 
 ```typescript
 import { useWallet } from '@solana/wallet-adapter-react';
-import { EmbeddedWalletPage } from '@hyperlink/wallet-adapter';
+import { EmbeddedWalletPage } from 'hyperlink-wallet-adapter';
 
 function WalletControls() {
   const { wallet } = useWallet();
@@ -289,23 +289,23 @@ function WalletControls() {
 }
 ```
 
-## 🌐 Browser Compatibility
+## Browser Compatibility
 
-The wallet adapter automatically detects the user's environment and adjusts behavior accordingly:
+The wallet adapter automatically detects the user's environment and adjusts its behavior accordingly:
 
-- **Desktop Browsers**: Full functionality with direct connection
-- **Mobile Browsers**: Optimized for mobile with iframe fallback
-- **PWA Mode**: Automatic iframe mode for progressive web apps
-- **In-App Browsers**: Graceful degradation with user guidance
+- **Desktop Browsers**: Full functionality with direct wallet connection
+- **Mobile Browsers**: Optimized mobile experience with iframe fallback when needed
+- **Progressive Web Apps**: Automatic iframe mode for PWA environments
+- **In-App Browsers**: Graceful handling with appropriate user guidance
 
-## ��️ Security Features
+## Security Features
 
-- **Allowlist Protection**: Client ID and domain validation
-- **Secure Communication**: Encrypted wallet communication
-- **Session Management**: Secure session handling with UUID generation
-- **Origin Validation**: Referrer URL validation for security
+- **Allowlist Protection**: Validates client ID and domain before allowing connections
+- **Secure Communication**: All wallet communications are encrypted
+- **Session Management**: Secure session handling using UUID-based identification
+- **Origin Validation**: Validates referrer URLs to prevent unauthorized access
 
-## 🚀 Development
+## Development
 
 ### Prerequisites
 
@@ -335,3 +335,35 @@ npm run pack
 ```
 
 ### Project Structure
+
+```
+wallet-adapter/
+├── src/
+│   ├── index.ts          # Main adapter class and exports
+│   ├── embed.ts          # Embedded wallet functionality
+│   ├── utils.ts          # Utility functions
+│   ├── interfaces.ts     # TypeScript interfaces
+│   ├── dialog.ts         # Dialog components
+│   └── wallet-standard.ts # Wallet standard implementation
+├── lib/
+│   ├── esm/              # ES Module build
+│   ├── cjs/              # CommonJS build
+│   └── types/            # TypeScript declarations
+└── package.json
+```
+
+## Getting Help
+
+If you encounter any issues or have questions:
+
+1. Check the [Configuration Guide](./CONFIGURATION.md) for setup help
+2. Review the [Examples](./EXAMPLES.md) for common use cases
+3. Open an issue on GitHub for bugs or feature requests
+
+## License
+
+MIT License - see LICENSE file for details
+
+## Contributing
+
+Contributions are welcome. Please ensure your code follows the existing style and includes appropriate tests.

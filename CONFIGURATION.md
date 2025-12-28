@@ -1,6 +1,6 @@
 # Configuration Guide
 
-This guide covers all configuration options and settings available for the `@hyperlink/wallet-adapter` library.
+This guide covers all configuration options and settings available for the HyperLink Wallet Adapter library.
 
 ## Table of Contents
 
@@ -28,7 +28,7 @@ const config = {
 };
 ```
 
-**Note:** Contact the HyperLink team to obtain your client ID. This is used for allowlist validation and security purposes.
+Contact the HyperLink team to obtain your client ID. This identifier is used for domain allowlist validation and security purposes.
 
 #### title
 
@@ -63,11 +63,11 @@ const config = {
 };
 ```
 
-**Theme Options:**
+Theme options:
 
-- `'system'` - Automatically follows the user's system theme preference
-- `'light'` - Forces light theme regardless of system preference
-- `'dark'` - Forces dark theme regardless of system preference
+- `system` - Automatically follows the user's system theme preference
+- `light` - Forces light theme regardless of system preference
+- `dark` - Forces dark theme regardless of system preference
 
 ## Advanced Configuration
 
@@ -78,11 +78,11 @@ const config = {
 **Type:** `boolean`
 **Required:** No
 **Default:** `true`
-**Description:** Whether the wallet is available on desktop platforms.
+**Description:** Indicates whether the wallet is available on desktop platforms.
 
 ```typescript
 const config = {
-  installedOnDesktop: true, // Enable desktop support
+  installedOnDesktop: true,
 };
 ```
 
@@ -91,11 +91,11 @@ const config = {
 **Type:** `boolean`
 **Required:** No
 **Default:** `true`
-**Description:** Whether the wallet is available on iOS devices.
+**Description:** Indicates whether the wallet is available on iOS devices.
 
 ```typescript
 const config = {
-  installedOnIos: true, // Enable iOS support
+  installedOnIos: true,
 };
 ```
 
@@ -104,11 +104,11 @@ const config = {
 **Type:** `boolean`
 **Required:** No
 **Default:** `false`
-**Description:** Whether the wallet is available on Android devices.
+**Description:** Indicates whether the wallet is available on Android devices.
 
 ```typescript
 const config = {
-  installedOnAndroid: true, // Enable Android support
+  installedOnAndroid: false,
 };
 ```
 
@@ -119,11 +119,11 @@ const config = {
 **Type:** `boolean`
 **Required:** No
 **Default:** `false`
-**Description:** Whether to hide the draggable wallet widget.
+**Description:** When set to true, hides the draggable wallet widget.
 
 ```typescript
 const config = {
-  hideDraggableWidget: true, // Hide the draggable widget
+  hideDraggableWidget: true,
 };
 ```
 
@@ -132,11 +132,11 @@ const config = {
 **Type:** `boolean`
 **Required:** No
 **Default:** `false`
-**Description:** Whether to hide the wallet onboarding interface.
+**Description:** When set to true, hides the wallet onboarding interface.
 
 ```typescript
 const config = {
-  hideWalletOnboard: true, // Hide wallet onboarding
+  hideWalletOnboard: true,
 };
 ```
 
@@ -144,39 +144,36 @@ const config = {
 
 ### Build Environment
 
-The library automatically detects and configures the build environment. Currently, only production is supported:
+The library automatically detects and configures the build environment. Currently, only the production environment is supported:
 
 ```typescript
-import { HYPERLINK_BUILD_ENV } from "@hyperlink/wallet-adapter";
+import { HYPERLINK_BUILD_ENV } from "hyperlink-wallet-adapter";
 
-// The library automatically uses production environment
+// The library automatically uses the production environment
 const buildEnv = HYPERLINK_BUILD_ENV.PRODUCTION;
 ```
 
-**Available Environments:**
+Available environments:
 
 - `PRODUCTION` - Production environment (currently the only supported option)
-- `STAGING` - Staging environment (not yet supported)
-- `DEVELOPMENT` - Development environment (not yet supported)
-- `ADAPTER` - Adapter environment (not yet supported)
-- `LOCAL` - Local environment (not yet supported)
+- Other environments are planned for future releases
 
 ## Security Configuration
 
 ### Allowlist Protection
 
-The library automatically validates your domain against the allowlist using your client ID. This ensures that only authorized domains can use your wallet integration.
+The library automatically validates your domain against an allowlist using your client ID. This ensures that only authorized domains can use your wallet integration.
 
-**Automatic Validation:**
+Automatic validation process:
 
-- Domain validation happens on wallet initialization
-- Uses your client ID and the current domain
-- Automatically disconnects if validation fails
+- Domain validation occurs during wallet initialization
+- Uses your client ID and the current domain origin
+- Automatically disconnects the wallet if validation fails
 
-**Security Features:**
+Security features included:
 
 - Client ID validation
-- Domain allowlist checking
+- Domain allowlist verification
 - Secure session management
 - UUID-based session identification
 
@@ -209,56 +206,54 @@ const config = {
 When registering the wallet, you must provide an RPC URL:
 
 ```typescript
+import { registerHyperLinkWallet } from "hyperlink-wallet-adapter";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+
 const unregister = registerHyperLinkWallet({
   clientId: "your-client-id",
   title: "Your dApp",
   theme: "system",
-  rpcUrl: "https://api.mainnet-beta.solana.com", // Required RPC URL
+  rpcUrl: "https://api.mainnet-beta.solana.com",
   walletAdapterNetwork: WalletAdapterNetwork.Mainnet,
 });
 ```
 
-**Recommended RPC Endpoints:**
+Recommended RPC endpoints:
 
-- **Mainnet:** `https://api.mainnet-beta.solana.com`
-- **Devnet:** `https://api.devnet.solana.com`
-- **Testnet:** `https://api.testnet.solana.com`
+- Mainnet: `https://api.mainnet-beta.solana.com`
+- Devnet: `https://api.devnet.solana.com`
+- Testnet: `https://api.testnet.solana.com`
 
 ## Mobile Configuration
 
 ### Mobile Detection
 
-The library automatically detects mobile devices and adjusts behavior accordingly:
+The library automatically detects mobile devices and adjusts its behavior accordingly:
 
-**Automatic Detection:**
+Automatic detection capabilities:
 
 - iOS device detection
 - Android device detection
 - WebView detection
-- PWA mode detection
+- Progressive Web App (PWA) mode detection
 
-**Mobile Optimizations:**
+Mobile optimizations:
 
-- Automatic iframe mode for certain mobile scenarios
+- Automatic iframe mode for specific mobile scenarios
 - Touch-optimized interface
 - Responsive design
-- PWA compatibility
+- Full PWA compatibility
 
-### PWA Support
+### Progressive Web App Support
 
-For Progressive Web Apps, the library automatically enables iframe mode:
-
-```typescript
-// The library automatically detects PWA mode
-// No additional configuration needed
-```
+For Progressive Web Apps, the library automatically enables iframe mode. No additional configuration is needed as the detection and activation happen automatically.
 
 ## Complete Configuration Example
 
 Here's a complete configuration example with all options:
 
 ```typescript
-import { registerHyperLinkWallet } from "@hyperlink/wallet-adapter";
+import { registerHyperLinkWallet } from "hyperlink-wallet-adapter";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 
 const walletConfig = {
@@ -283,10 +278,10 @@ const walletConfig = {
   rpcUrl: "https://api.mainnet-beta.solana.com",
 };
 
-// Register the wallet
+// Register the wallet adapter
 const unregister = registerHyperLinkWallet(walletConfig);
 
-// Later, unregister when needed
+// Unregister when your application unmounts or when no longer needed
 unregister();
 ```
 
@@ -350,570 +345,31 @@ const config = validateConfig({
 
 ### Common Issues
 
-1. **Missing clientId**
+**Missing clientId**
+- Error: "clientId is required"
+- Solution: Contact the HyperLink team to obtain your client ID
 
-   - Error: "clientId is required"
-   - Solution: Contact HyperLink team to obtain your client ID
+**Invalid theme value**
+- Error: "Invalid theme value"
+- Solution: Use only 'system', 'light', or 'dark' as the theme value
 
-2. **Invalid theme value**
+**Network configuration mismatch**
+- Error: Network-related errors
+- Solution: Ensure your walletAdapterNetwork setting matches your RPC URL (mainnet RPC with Mainnet network, devnet RPC with Devnet network)
 
-   - Error: "Invalid theme value"
-   - Solution: Use only 'system', 'light', or 'dark'
-
-3. **Network configuration mismatch**
-
-   - Error: Network-related errors
-   - Solution: Ensure walletAdapterNetwork matches your RPC URL
-
-4. **Domain not allowlisted**
-
-   - Error: Wallet disconnects automatically
-   - Solution: Ensure your domain is properly configured with HyperLink
+**Domain not allowlisted**
+- Error: Wallet disconnects automatically after initialization
+- Solution: Ensure your domain is properly registered in the HyperLink allowlist. Contact the HyperLink team to add your domain
 
 ### Configuration Validation
 
-The library automatically validates your configuration and will throw descriptive errors for invalid configurations. Always wrap your configuration in try-catch blocks:
+The library automatically validates your configuration and will throw descriptive errors for invalid configurations. It is recommended to wrap your wallet registration in try-catch blocks:
 
 ```typescript
 try {
   const unregister = registerHyperLinkWallet(config);
 } catch (error) {
   console.error("Wallet configuration error:", error.message);
-  // Handle configuration error
+  // Handle the configuration error appropriately
 }
-```
-
-````
-
-### 4. EXAMPLES.md
-
-```markdown
-# Examples
-
-This document provides comprehensive examples of how to use the `@hyperlink/wallet-adapter` library in various scenarios.
-
-## Table of Contents
-
-- [Basic Integration](#basic-integration)
-- [React Integration](#react-integration)
-- [Transaction Examples](#transaction-examples)
-- [Sign-In Examples](#sign-in-examples)
-- [Advanced Usage](#advanced-usage)
-- [Error Handling](#error-handling)
-- [Real-World Scenarios](#real-world-scenarios)
-
-## Basic Integration
-
-### Simple Wallet Connection
-
-```typescript
-import { HyperLinkWalletAdapter } from '@hyperlink/wallet-adapter';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-
-// Create wallet adapter instance
-const wallet = new HyperLinkWalletAdapter({
-  clientId: 'your-client-id',
-  title: 'My dApp',
-  theme: 'system',
-  walletAdapterNetwork: WalletAdapterNetwork.Mainnet
-});
-
-// Connect to wallet
-async function connectWallet() {
-  try {
-    await wallet.connect();
-    console.log('Connected!', wallet.publicKey?.toBase58());
-  } catch (error) {
-    console.error('Connection failed:', error);
-  }
-}
-
-// Disconnect from wallet
-async function disconnectWallet() {
-  try {
-    await wallet.disconnect();
-    console.log('Disconnected!');
-  } catch (error) {
-    console.error('Disconnection failed:', error);
-  }
-}
-````
-
-### Wallet Registration
-
-```typescript
-import { registerHyperLinkWallet } from "@hyperlink/wallet-adapter";
-
-// Register the wallet
-const unregister = registerHyperLinkWallet({
-  clientId: "your-client-id",
-  title: "My dApp",
-  theme: "system",
-  rpcUrl: "https://api.mainnet-beta.solana.com",
-  installedOnDesktop: true,
-  installedOnIos: true,
-  installedOnAndroid: false,
-  walletAdapterNetwork: WalletAdapterNetwork.Mainnet,
-});
-
-// Later, unregister
-unregister();
-```
-
-## React Integration
-
-### Basic React Component
-
-```typescript
-import React, { useState, useEffect } from 'react';
-import { HyperLinkWalletAdapter } from '@hyperlink/wallet-adapter';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-
-function WalletComponent() {
-  const [wallet, setWallet] = useState<HyperLinkWalletAdapter | null>(null);
-  const [connected, setConnected] = useState(false);
-  const [publicKey, setPublicKey] = useState<string | null>(null);
-
-  useEffect(() => {
-    const newWallet = new HyperLinkWalletAdapter({
-      clientId: 'your-client-id',
-      title: 'My dApp',
-      theme: 'system',
-      walletAdapterNetwork: WalletAdapterNetwork.Mainnet
-    });
-
-    // Set up event listeners
-    newWallet.on('connect', (pk) => {
-      setConnected(true);
-      setPublicKey(pk.toBase58());
-    });
-
-    newWallet.on('disconnect', () => {
-      setConnected(false);
-      setPublicKey(null);
-    });
-
-    setWallet(newWallet);
-
-    // Cleanup
-    return () => {
-      newWallet.disconnect();
-    };
-  }, []);
-
-  const connect = async () => {
-    if (wallet) {
-      try {
-        await wallet.connect();
-      } catch (error) {
-        console.error('Connection failed:', error);
-      }
-    }
-  };
-
-  const disconnect = async () => {
-    if (wallet) {
-      try {
-        await wallet.disconnect();
-      } catch (error) {
-        console.error('Disconnection failed:', error);
-      }
-    }
-  };
-
-  return (
-    <div>
-      {!connected ? (
-        <button onClick={connect}>Connect Wallet</button>
-      ) : (
-        <div>
-          <p>Connected: {publicKey}</p>
-          <button onClick={disconnect}>Disconnect</button>
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default WalletComponent;
-```
-
-### With React Wallet Adapter
-
-```typescript
-import React from 'react';
-import { WalletProvider } from '@solana/wallet-adapter-react';
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { HyperLinkWalletAdapter } from '@hyperlink/wallet-adapter';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-
-// Import wallet adapter CSS
-import '@solana/wallet-adapter-react-ui/styles.css';
-
-const wallets = [
-  new HyperLinkWalletAdapter({
-    clientId: 'your-client-id',
-    title: 'My dApp',
-    theme: 'system',
-    walletAdapterNetwork: WalletAdapterNetwork.Mainnet
-  })
-];
-
-function App() {
-  return (
-    <WalletProvider wallets={wallets} autoConnect>
-      <WalletModalProvider>
-        <div>
-          <h1>My Solana dApp</h1>
-          <WalletActions />
-        </div>
-      </WalletModalProvider>
-    </WalletProvider>
-  );
-}
-
-function WalletActions() {
-  const { wallet, connect, disconnect, connected, publicKey } = useWallet();
-
-  const handleConnect = async () => {
-    try {
-      await connect();
-    } catch (error) {
-      console.error('Failed to connect:', error);
-    }
-  };
-
-  const handleDisconnect = async () => {
-    try {
-      await disconnect();
-    } catch (error) {
-      console.error('Failed to disconnect:', error);
-    }
-  };
-
-  return (
-    <div>
-      {!connected ? (
-        <button onClick={handleConnect}>Connect Wallet</button>
-      ) : (
-        <div>
-          <p>Connected: {publicKey?.toBase58()}</p>
-          <button onClick={handleDisconnect}>Disconnect</button>
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default App;
-```
-
-## Transaction Examples
-
-### Simple SOL Transfer
-
-```typescript
-import { useWallet } from '@solana/wallet-adapter-react';
-import { useConnection } from '@solana/wallet-adapter-react';
-import { Transaction, SystemProgram, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-
-function TransferComponent() {
-  const { wallet, publicKey, connected } = useWallet();
-  const { connection } = useConnection();
-  const [recipient, setRecipient] = useState('');
-  const [amount, setAmount] = useState('0.1');
-  const [loading, setLoading] = useState(false);
-
-  const sendTransaction = async () => {
-    if (!connected || !publicKey || !recipient) return;
-
-    try {
-      setLoading(true);
-
-      const transaction = new Transaction().add(
-        SystemProgram.transfer({
-          fromPubkey: publicKey,
-          toPubkey: new PublicKey(recipient),
-          lamports: parseFloat(amount) * LAMPORTS_PER_SOL
-        })
-      );
-
-      const signature = await wallet.sendTransaction(transaction, connection);
-      console.log('Transaction sent:', signature);
-
-      // Wait for confirmation
-      const confirmation = await connection.confirmTransaction(signature);
-      if (confirmation.value.err) {
-        throw new Error('Transaction failed');
-      }
-
-      alert('Transaction successful!');
-    } catch (error) {
-      console.error('Transaction failed:', error);
-      alert('Transaction failed: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div>
-      <h3>Send SOL</h3>
-      <input
-        type="text"
-        placeholder="Recipient Public Key"
-        value={recipient}
-        onChange={(e) => setRecipient(e.target.value)}
-      />
-      <input
-        type="number"
-        placeholder="Amount (SOL)"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        step="0.01"
-        min="0"
-      />
-      <button
-        onClick={sendTransaction}
-        disabled={!connected || !recipient || loading}
-      >
-        {loading ? 'Sending...' : 'Send SOL'}
-      </button>
-    </div>
-  );
-}
-```
-
-### SPL Token Transfer
-
-```typescript
-import { useWallet } from '@solana/wallet-adapter-react';
-import { useConnection } from '@solana/wallet-adapter-react';
-import { Transaction, PublicKey } from '@solana/web3.js';
-import { TOKEN_PROGRAM_ID, createTransferInstruction } from '@solana/spl-token';
-
-function TokenTransferComponent() {
-  const { wallet, publicKey, connected } = useWallet();
-  const { connection } = useConnection();
-  const [recipient, setRecipient] = useState('');
-  const [tokenMint, setTokenMint] = useState('');
-  const [amount, setAmount] = useState('1');
-  const [loading, setLoading] = useState(false);
-
-  const sendToken = async () => {
-    if (!connected || !publicKey || !recipient || !tokenMint) return;
-
-    try {
-      setLoading(true);
-
-      // Get token accounts
-      const fromTokenAccount = await connection.getTokenAccountsByOwner(publicKey, {
-        mint: new PublicKey(tokenMint)
-      });
-
-      const toTokenAccount = await connection.getTokenAccountsByOwner(
-        new PublicKey(recipient),
-        { mint: new PublicKey(tokenMint) }
-      );
-
-      if (fromTokenAccount.value.length === 0) {
-        throw new Error('No token account found for sender');
-      }
-
-      if (toTokenAccount.value.length === 0) {
-        throw new Error('No token account found for recipient');
-      }
-
-      const transaction = new Transaction().add(
-        createTransferInstruction(
-          fromTokenAccount.value[0].pubkey,
-          toTokenAccount.value[0].pubkey,
-          publicKey,
-          BigInt(parseFloat(amount) * Math.pow(10, 9)) // Assuming 9 decimals
-        )
-      );
-
-      const signature = await wallet.sendTransaction(transaction, connection);
-      console.log('Token transfer sent:', signature);
-
-      const confirmation = await connection.confirmTransaction(signature);
-      if (confirmation.value.err) {
-        throw new Error('Transaction failed');
-      }
-
-      alert('Token transfer successful!');
-    } catch (error) {
-      console.error('Token transfer failed:', error);
-      alert('Token transfer failed: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div>
-      <h3>Send SPL Token</h3>
-      <input
-        type="text"
-        placeholder="Token Mint Address"
-        value={tokenMint}
-        onChange={(e) => setTokenMint(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Recipient Public Key"
-        value={recipient}
-        onChange={(e) => setRecipient(e.target.value)}
-      />
-      <input
-        type="number"
-        placeholder="Amount"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        step="0.01"
-        min="0"
-      />
-      <button
-        onClick={sendToken}
-        disabled={!connected || !recipient || !tokenMint || loading}
-      >
-        {loading ? 'Sending...' : 'Send Token'}
-      </button>
-    </div>
-  );
-}
-```
-
-### Multiple Transaction Signing
-
-```typescript
-import { useWallet } from '@solana/wallet-adapter-react';
-import { useConnection } from '@solana/wallet-adapter-react';
-import { Transaction, SystemProgram, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-
-function BatchTransferComponent() {
-  const { wallet, publicKey, connected } = useWallet();
-  const { connection } = useConnection();
-  const [recipients, setRecipients] = useState(['', '']);
-  const [amount, setAmount] = useState('0.1');
-  const [loading, setLoading] = useState(false);
-
-  const sendBatchTransactions = async () => {
-    if (!connected || !publicKey || recipients.some(r => !r)) return;
-
-    try {
-      setLoading(true);
-
-      const transactions = recipients.map(recipient =>
-        new Transaction().add(
-          SystemProgram.transfer({
-            fromPubkey: publicKey,
-            toPubkey: new PublicKey(recipient),
-            lamports: parseFloat(amount) * LAMPORTS_PER_SOL
-          })
-        )
-      );
-
-      // Sign all transactions
-      const signedTransactions = await wallet.signAllTransactions(transactions);
-
-      // Send each transaction
-      const signatures = [];
-      for (const signedTx of signedTransactions) {
-        const signature = await connection.sendRawTransaction(signedTx.serialize());
-        signatures.push(signature);
-      }
-
-      console.log('Batch transactions sent:', signatures);
-      alert('Batch transactions successful!');
-    } catch (error) {
-      console.error('Batch transactions failed:', error);
-      alert('Batch transactions failed: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const addRecipient = () => {
-    setRecipients([...recipients, '']);
-  };
-
-  const removeRecipient = (index: number) => {
-    setRecipients(recipients.filter((_, i) => i !== index));
-  };
-
-  const updateRecipient = (index: number, value: string) => {
-    const newRecipients = [...recipients];
-    newRecipients[index] = value;
-    setRecipients(newRecipients);
-  };
-
-  return (
-    <div>
-      <h3>Batch Transfer SOL</h3>
-      {recipients.map((recipient, index) => (
-        <div key={index}>
-          <input
-            type="text"
-            placeholder={`Recipient ${index + 1} Public Key`}
-            value={recipient}
-            onChange={(e) => updateRecipient(index, e.target.value)}
-          />
-          {recipients.length > 1 && (
-            <button onClick={() => removeRecipient(index)}>Remove</button>
-          )}
-        </div>
-      ))}
-      <button onClick={addRecipient}>Add Recipient</button>
-      <input
-        type="number"
-        placeholder="Amount per recipient (SOL)"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        step="0.01"
-        min="0"
-      />
-      <button
-        onClick={sendBatchTransactions}
-        disabled={!connected || recipients.some(r => !r) || loading}
-      >
-        {loading ? 'Sending...' : 'Send Batch Transactions'}
-      </button>
-    </div>
-  );
-}
-```
-
-## Sign-In Examples
-
-### Basic Sign-In
-
-```typescript
-import { useWallet } from '@solana/wallet-adapter-react';
-
-function SignInComponent() {
-  const { wallet } = useWallet();
-  const [loading, setLoading] = useState(false);
-  const [signedIn, setSignedIn] = useState(false);
-
-  const handleSignIn = async () => {
-    if (!wallet || !('signIn' in wallet)) return;
-
-    try {
-      setLoading(true);
-
-      const siwsInput = {
-        domain: 'yourdomain.com',
-        statement: 'Sign in to access the application',
-        uri: 'https://yourdomain.com',
-        version: '1',
-        chainId: 'solana:mainnet',
-        nonce: 'random-nonce-' + Date.now(),
-        issuedAt: new Date().toISOString(),
-        expirationTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-        notBefore: new Date().toISOString(),
-        resources: ['https://yourdomain.com']
-      };
-
-      const output = await wallet.signIn(siwsInput);
 ```

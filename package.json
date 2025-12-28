@@ -46,6 +46,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@solana/web3.js": "^1.98.4",
     "@types/bs58": "^4.0.4",
     "@types/keccak": "^3.0.1",
     "@types/node-fetch": "^2.6.1",
